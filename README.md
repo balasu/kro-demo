@@ -12,12 +12,19 @@ gcloud container clusters get-credentials $CLUSTER_NAME --region $REGION
 #KCC installation
 
 gcloud storage cp gs://configconnector-operator/latest/release-bundle.tar.gz release-bundle.tar.gz
+
 tar zxvf release-bundle.tar.gz
+
 kubectl apply -f operator-system/configconnector-operator.yaml
+
 gcloud iam service-accounts create kcc-operator
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member="serviceAccount:kcc-operator@${PROJECT_ID}.iam.gserviceaccount.com"  --role="roles/owner"
+
 gcloud iam service-accounts add-iam-policy-binding kcc-operator@${PROJECT_ID}.iam.gserviceaccount.com  --member="serviceAccount:${PROJECT_ID}.svc.id.goog[cnrm-system/cnrm-controller-manager]"  --role="roles/iam.workloadIdentityUser"
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member="serviceAccount:kcc-operator@${PROJECT_ID}.iam.gserviceaccount.com"  --role="roles/storage.admin"
+
 kubectl apply -f - <<EOF
 apiVersion: core.cnrm.cloud.google.com/v1beta1
 kind: ConfigConnector
