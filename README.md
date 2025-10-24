@@ -54,7 +54,9 @@ export KRO_VERSION=$(curl -sL \
   )
 
 echo $KRO_VERSION
+
 helm install kro oci://registry.k8s.io/kro/charts/kro   --namespace kro   --create-namespace   --version=${KRO_VERSION}
+
 kubectl get pods -n kro
 
 kubectl get crd resourcegraphdefinitions.kro.run
